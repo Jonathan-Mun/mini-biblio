@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clean Code — Mini Bibliothèque</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['Georgia','Cambria','serif'] },
+          colors: {
+            ink: { DEFAULT:'#1c1c1a', soft:'#4a4a46', muted:'#8a8a84' },
+            cream: { DEFAULT:'#f7f4ed', dark:'#ece8df', border:'#ddd9ce' },
+            forest: { DEFAULT:'#2c5f3e', light:'#e8f0eb', hover:'#234d32' },
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+  </style>
+</head>
+<body class="bg-cream text-ink min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-ink sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="index.php" class="font-display text-white text-xl tracking-wide">Bibliotheca</a>
+      <div class="flex items-center gap-1">
+        <a href="index.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Catalogue</a>
+        <a href="authors.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Auteurs</a>
+        <a href="search.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Recherche</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="auth/login.php" class="text-white/70 text-sm hover:text-white transition-colors">Connexion</a>
+        <a href="auth/register.php" class="bg-white text-ink text-sm font-semibold px-4 py-1.5 rounded hover:bg-cream transition-colors">S'inscrire</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- BREADCRUMB -->
+  <div class="max-w-6xl mx-auto px-6 py-4">
+    <p class="text-ink-muted text-sm">
+      <a href="index.php" class="hover:text-ink transition-colors">Catalogue</a>
+      <span class="mx-2">/</span>
+      <a href="category.php?id=1" class="hover:text-ink transition-colors">Informatique</a>
+      <span class="mx-2">/</span>
+      <span class="text-ink">Clean Code</span>
+    </p>
+  </div>
+
+  <!-- CONTENU PRINCIPAL -->
+  <div class="max-w-6xl mx-auto px-6 pb-16">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-10">
+
+      <!-- COLONNE GAUCHE -->
+      <div class="lg:col-span-2">
+
+        <!-- En-tête livre -->
+        <div class="flex gap-8 mb-10">
+          <!-- Couverture -->
+          <div class="w-36 h-52 bg-gradient-to-br from-emerald-50 to-teal-100 rounded-lg border border-cream-border flex-shrink-0 flex items-center justify-center shadow-md">
+            <span class="text-ink-muted text-xs text-center px-3 font-medium leading-relaxed">Couverture non disponible</span>
+          </div>
+          <!-- Infos -->
+          <div class="flex-1">
+            <span class="inline-block bg-forest/10 text-forest text-xs font-semibold px-3 py-1 rounded-full mb-3">Informatique</span>
+            <h1 class="font-display text-3xl font-bold text-ink leading-tight mb-2">Clean Code</h1>
+            <p class="text-ink-soft text-sm mb-4">
+              par <a href="author.php?id=1" class="text-forest font-semibold hover:underline">Robert C. Martin</a>
+              &nbsp;&middot;&nbsp; 2008
+            </p>
+            <!-- Note -->
+            <div class="flex items-center gap-2 mb-5">
+              <div class="flex gap-0.5">
+                <?php for ($i = 1; $i <= 5; $i++): ?>
+                <svg class="w-4 h-4 <?= $i <= 4 ? 'text-amber-400' : 'text-cream-border' ?>" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <?php endfor; ?>
+              </div>
+              <span class="text-sm font-semibold text-ink">4.2</span>
+              <span class="text-ink-muted text-sm">/ 5 &nbsp;&middot;&nbsp; 14 avis</span>
+            </div>
+            <!-- Actions -->
+            <div class="flex gap-3 flex-wrap">
+              <a href="download.php?id=1" class="bg-forest text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-forest-hover transition-colors">Telecharger le PDF</a>
+              <a href="author.php?id=1" class="bg-white border border-cream-border text-ink text-sm font-semibold px-5 py-2.5 rounded-lg hover:border-ink/40 transition-colors">Voir l'auteur</a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Description -->
+        <div class="mb-10">
+          <h2 class="font-display text-xl font-semibold mb-4">Description</h2>
+          <p class="text-ink-soft leading-relaxed text-sm mb-3">
+            <?= nl2br(htmlspecialchars($book['description'])) ?>
+          </p>
+          <!-- Demo statique -->
+          <p class="text-ink-soft leading-relaxed text-sm mb-3">
+            Même un mauvais code peut fonctionner. Mais si le code n'est pas propre, il peut mettre à genoux une organisation de développement. Chaque année, d'innombrables heures et des ressources significatives sont perdues à cause d'un code mal écrit.
+          </p>
+          <p class="text-ink-soft leading-relaxed text-sm">
+            Dans ce livre, le légendaire expert en développement logiciel Robert C. Martin présente un paradigme révolutionnaire qui vous permettra de produire un meilleur code. Martin s'est associé à ses collègues de Object Mentor pour distiller leurs meilleures pratiques agiles et en extraire une approche de nettoyage du code.
+          </p>
+        </div>
+
+        <!-- Avis -->
+        <div>
+          <div class="flex items-center justify-between mb-6">
+            <h2 class="font-display text-xl font-semibold">Avis des membres</h2>
+            <span class="text-ink-muted text-sm">14 avis</span>
+          </div>
+
+          <!-- Formulaire avis (si connecté) -->
+          <div class="bg-white border border-cream-border rounded-xl p-5 mb-6">
+            <h3 class="text-sm font-semibold text-ink mb-4">Laisser un avis</h3>
+            <form method="POST" action="book.php?id=1">
+              <div class="mb-4">
+                <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Votre note</label>
+                <div class="flex gap-1">
+                  <?php for ($i = 1; $i <= 5; $i++): ?>
+                  <button type="button" class="w-8 h-8 rounded border border-cream-border text-sm font-semibold text-ink-muted hover:bg-amber-50 hover:border-amber-300 transition-colors"><?= $i ?></button>
+                  <?php endfor; ?>
+                </div>
+              </div>
+              <div class="mb-4">
+                <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Commentaire</label>
+                <textarea name="comment" rows="3" placeholder="Votre avis sur ce livre..." class="w-full border border-cream-border rounded-lg px-4 py-2.5 text-sm text-ink placeholder-ink-muted/60 focus:outline-none focus:border-ink/40 resize-none bg-cream"></textarea>
+              </div>
+              <button type="submit" class="bg-ink text-white text-sm font-semibold px-5 py-2 rounded-lg hover:bg-ink/80 transition-colors">Publier l'avis</button>
+            </form>
+          </div>
+
+          <!-- Liste des avis -->
+          <div class="space-y-4">
+
+            <div class="bg-white border border-cream-border rounded-xl p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <p class="text-sm font-semibold text-ink">Jonathan M.</p>
+                  <p class="text-xs text-ink-muted">12 mars 2026</p>
+                </div>
+                <div class="flex gap-0.5">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+              </div>
+              <p class="text-sm text-ink-soft leading-relaxed">Une référence absolue pour tout développeur. Les principes sont intemporels et s'appliquent à n'importe quel langage. Lecture obligatoire.</p>
+            </div>
+
+            <div class="bg-white border border-cream-border rounded-xl p-5">
+              <div class="flex items-start justify-between mb-3">
+                <div>
+                  <p class="text-sm font-semibold text-ink">Sophie L.</p>
+                  <p class="text-xs text-ink-muted">3 mars 2026</p>
+                </div>
+                <div class="flex gap-0.5">
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                  <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                </div>
+              </div>
+              <p class="text-sm text-ink-soft leading-relaxed">Excellent, les exemples en Java sont toujours pertinents même si on code dans un autre langage. Très bien structuré.</p>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- COLONNE DROITE -->
+      <aside class="lg:col-span-1 space-y-5">
+
+        <!-- Infos rapides -->
+        <div class="bg-white border border-cream-border rounded-xl p-5">
+          <h3 class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">Informations</h3>
+          <div class="space-y-3 text-sm">
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Auteur</span>
+              <a href="author.php?id=1" class="text-forest font-medium hover:underline">Robert C. Martin</a>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Annee</span>
+              <span class="text-ink font-medium">2008</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Categorie</span>
+              <a href="category.php?id=1" class="text-forest font-medium hover:underline">Informatique</a>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">PDF</span>
+              <span class="text-forest font-semibold">Disponible</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Note moyenne</span>
+              <span class="text-ink font-semibold">4.2 / 5</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Admin actions -->
+        <div class="bg-white border border-cream-border rounded-xl p-5">
+          <h3 class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">Administration</h3>
+          <div class="space-y-2">
+            <a href="admin/edit_book.php?id=1" class="block w-full text-center bg-ink text-white text-sm font-semibold py-2.5 rounded-lg hover:bg-ink/80 transition-colors">Modifier le livre</a>
+            <a href="admin/upload_pdf.php?id=1" class="block w-full text-center bg-cream border border-cream-border text-ink text-sm font-semibold py-2.5 rounded-lg hover:border-ink/40 transition-colors">Changer le PDF</a>
+            <a href="delete_book.php?id=1" class="block w-full text-center text-red-700 border border-red-200 bg-red-50 text-sm font-semibold py-2.5 rounded-lg hover:bg-red-100 transition-colors" onclick="return confirm('Confirmer la suppression ?')">Supprimer</a>
+          </div>
+        </div>
+
+      </aside>
+    </div>
+  </div>
+
+  <footer class="border-t border-cream-border py-8 px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between text-ink-muted text-sm">
+      <span class="font-display text-ink text-base">Bibliotheca</span>
+      <span>Mini Bibliothèque &mdash; Projet PHP / PDO</span>
+    </div>
+  </footer>
+
+</body>
+</html>

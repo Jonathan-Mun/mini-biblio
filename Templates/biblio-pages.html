@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Recherche — Mini Bibliothèque</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['Georgia','Cambria','serif'] },
+          colors: {
+            ink: { DEFAULT:'#1c1c1a', soft:'#4a4a46', muted:'#8a8a84' },
+            cream: { DEFAULT:'#f7f4ed', dark:'#ece8df', border:'#ddd9ce' },
+            forest: { DEFAULT:'#2c5f3e', light:'#e8f0eb', hover:'#234d32' },
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+    .card-hover { transition: transform 200ms ease, box-shadow 200ms ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,28,26,.1); }
+  </style>
+</head>
+<body class="bg-cream text-ink min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-ink sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="index.php" class="font-display text-white text-xl tracking-wide">Bibliotheca</a>
+      <div class="flex items-center gap-1">
+        <a href="index.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Catalogue</a>
+        <a href="authors.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Auteurs</a>
+        <a href="search.php" class="text-white text-sm font-medium px-4 py-2 border-b-2 border-white">Recherche</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-white/60 text-sm">Bonjour, Jonathan</span>
+        <a href="auth/logout.php" class="bg-white/10 text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-white/20 transition-colors">Deconnexion</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SEARCH PAGE (search.php)                           -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="bg-ink py-12 px-6">
+    <div class="max-w-2xl mx-auto">
+      <p class="text-white/50 text-xs font-semibold uppercase tracking-widest mb-3 text-center">Recherche</p>
+      <form method="GET" action="search.php">
+        <div class="flex gap-2">
+          <input type="text" name="q" value="clean code" placeholder="Titre, auteur, categorie..."
+            class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/40 rounded-lg px-5 py-3 text-sm focus:outline-none focus:border-white/50 focus:bg-white/15 transition-all">
+          <button type="submit" class="bg-white text-ink text-sm font-semibold px-6 py-3 rounded-lg hover:bg-cream transition-colors flex-shrink-0">
+            Rechercher
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <p class="text-ink-muted text-sm mb-6">3 resultats pour <strong class="text-ink">"clean code"</strong></p>
+    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+      <a href="book.php?id=1" class="bg-white border border-cream-border rounded-xl card-hover block overflow-hidden">
+        <div class="h-36 bg-gradient-to-br from-emerald-50 to-teal-100 flex items-end p-4">
+          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Informatique</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-display text-sm font-semibold text-ink mb-1">Clean Code</h3>
+          <p class="text-ink-muted text-xs">Robert C. Martin</p>
+        </div>
+      </a>
+      <a href="book.php?id=5" class="bg-white border border-cream-border rounded-xl card-hover block overflow-hidden">
+        <div class="h-36 bg-gradient-to-br from-slate-100 to-slate-200 flex items-end p-4">
+          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Informatique</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-display text-sm font-semibold text-ink mb-1">The Clean Coder</h3>
+          <p class="text-ink-muted text-xs">Robert C. Martin</p>
+        </div>
+      </a>
+      <a href="book.php?id=6" class="bg-white border border-cream-border rounded-xl card-hover block overflow-hidden">
+        <div class="h-36 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-end p-4">
+          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Informatique</span>
+        </div>
+        <div class="p-4">
+          <h3 class="font-display text-sm font-semibold text-ink mb-1">Clean Architecture</h3>
+          <p class="text-ink-muted text-xs">Robert C. Martin</p>
+        </div>
+      </a>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- ADD BOOK (admin/add_book.php)                       -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="border-t-4 border-dashed border-cream-border max-w-6xl mx-auto px-6 pt-16 pb-16">
+    <p class="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-8">-- admin/add_book.php --</p>
+
+    <div class="max-w-2xl">
+      <div class="flex items-center gap-4 mb-8">
+        <a href="books.php" class="text-ink-muted text-sm hover:text-ink transition-colors">&larr; Livres</a>
+        <h2 class="font-display text-2xl font-bold text-ink">Ajouter un livre</h2>
+      </div>
+
+      <div class="bg-green-50 border border-green-200 text-green-800 text-sm px-4 py-3 rounded-lg mb-6">
+        Livre ajoute avec succes.
+      </div>
+
+      <div class="bg-white border border-cream-border rounded-xl p-7 shadow-sm">
+        <form method="POST" action="add_book.php" enctype="multipart/form-data" class="space-y-5">
+          <div>
+            <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Titre *</label>
+            <input type="text" name="title" placeholder="Titre du livre"
+              class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/40 bg-cream transition-colors">
+          </div>
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Auteur *</label>
+              <select name="author_id" class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink focus:outline-none focus:border-ink/40 bg-cream transition-colors">
+                <option value="">-- Choisir --</option>
+                <option value="1">Robert C. Martin</option>
+                <option value="2">Yuval Noah Harari</option>
+                <option value="3">Albert Camus</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Categorie *</label>
+              <select name="category_id" class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink focus:outline-none focus:border-ink/40 bg-cream transition-colors">
+                <option value="">-- Choisir --</option>
+                <option value="1">Informatique</option>
+                <option value="2">Histoire</option>
+                <option value="3">Roman</option>
+                <option value="4">Science</option>
+              </select>
+            </div>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Annee de parution</label>
+            <input type="number" name="year" placeholder="2024" min="1900" max="2099"
+              class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/40 bg-cream transition-colors">
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Description</label>
+            <textarea name="description" rows="4" placeholder="Resume du livre..."
+              class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/40 bg-cream transition-colors resize-none"></textarea>
+          </div>
+          <div>
+            <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Fichier PDF</label>
+            <div class="border-2 border-dashed border-cream-border rounded-lg p-6 text-center hover:border-ink/30 transition-colors cursor-pointer">
+              <input type="file" name="pdf" accept=".pdf" class="hidden" id="pdf-input">
+              <label for="pdf-input" class="cursor-pointer">
+                <p class="text-ink-muted text-sm">Glisser-deposer ou <span class="text-forest font-semibold">parcourir</span></p>
+                <p class="text-ink-muted text-xs mt-1">PDF uniquement &mdash; 20 Mo max</p>
+              </label>
+            </div>
+          </div>
+          <div class="flex gap-3 pt-2">
+            <button type="submit" class="bg-ink text-white text-sm font-semibold px-6 py-3 rounded-lg hover:bg-ink/80 transition-colors">Ajouter le livre</button>
+            <a href="books.php" class="border border-cream-border text-ink text-sm font-semibold px-6 py-3 rounded-lg hover:border-ink/40 transition-colors">Annuler</a>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- ADMIN DASHBOARD (admin/index.php)                  -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="border-t-4 border-dashed border-cream-border max-w-6xl mx-auto px-6 pt-16 pb-16">
+    <p class="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-8">-- admin/index.php --</p>
+
+    <div class="flex items-center justify-between mb-8">
+      <div>
+        <h2 class="font-display text-2xl font-bold text-ink">Tableau de bord</h2>
+        <p class="text-ink-muted text-sm mt-1">Bienvenue, Admin.</p>
+      </div>
+      <a href="add_book.php" class="bg-ink text-white text-sm font-semibold px-5 py-2.5 rounded-lg hover:bg-ink/80 transition-colors">+ Ajouter un livre</a>
+    </div>
+
+    <!-- Stats -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
+      <div class="bg-white border border-cream-border rounded-xl p-5">
+        <p class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Livres</p>
+        <p class="font-display text-3xl font-bold text-ink">24</p>
+        <p class="text-ink-muted text-xs mt-1">dans le catalogue</p>
+      </div>
+      <div class="bg-white border border-cream-border rounded-xl p-5">
+        <p class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Auteurs</p>
+        <p class="font-display text-3xl font-bold text-ink">9</p>
+        <p class="text-ink-muted text-xs mt-1">enregistres</p>
+      </div>
+      <div class="bg-white border border-cream-border rounded-xl p-5">
+        <p class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Membres</p>
+        <p class="font-display text-3xl font-bold text-ink">47</p>
+        <p class="text-ink-muted text-xs mt-1">inscrits</p>
+      </div>
+      <div class="bg-white border border-cream-border rounded-xl p-5">
+        <p class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Avis</p>
+        <p class="font-display text-3xl font-bold text-ink">138</p>
+        <p class="text-ink-muted text-xs mt-1">deposes</p>
+      </div>
+    </div>
+
+    <!-- Table livres -->
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display text-lg font-semibold">Gestion des livres</h3>
+      <a href="books.php" class="text-forest text-sm font-semibold hover:underline">Voir tout &rarr;</a>
+    </div>
+    <div class="bg-white border border-cream-border rounded-xl overflow-hidden mb-8">
+      <table class="w-full text-sm">
+        <thead class="bg-cream border-b border-cream-border">
+          <tr>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Titre</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Auteur</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Categorie</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Note</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">PDF</th>
+            <th class="text-right px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-cream-border">
+          <tr class="hover:bg-cream/50 transition-colors">
+            <td class="px-5 py-4 font-medium text-ink">Clean Code</td>
+            <td class="px-5 py-4 text-ink-soft">Robert C. Martin</td>
+            <td class="px-5 py-4"><span class="bg-forest/10 text-forest text-xs font-semibold px-2.5 py-1 rounded-full">Informatique</span></td>
+            <td class="px-5 py-4 text-ink-soft">4.2 / 5</td>
+            <td class="px-5 py-4"><span class="text-forest text-xs font-semibold">Oui</span></td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex gap-2 justify-end">
+                <a href="edit_book.php?id=1" class="text-ink border border-cream-border text-xs font-semibold px-3 py-1.5 rounded-lg hover:border-ink/40 transition-colors">Modifier</a>
+                <a href="delete_book.php?id=1" class="text-red-700 border border-red-200 bg-red-50 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors" onclick="return confirm('Supprimer ce livre ?')">Supprimer</a>
+              </div>
+            </td>
+          </tr>
+          <tr class="hover:bg-cream/50 transition-colors">
+            <td class="px-5 py-4 font-medium text-ink">Sapiens</td>
+            <td class="px-5 py-4 text-ink-soft">Yuval Noah Harari</td>
+            <td class="px-5 py-4"><span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full">Histoire</span></td>
+            <td class="px-5 py-4 text-ink-soft">4.8 / 5</td>
+            <td class="px-5 py-4"><span class="text-ink-muted text-xs">Non</span></td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex gap-2 justify-end">
+                <a href="edit_book.php?id=2" class="text-ink border border-cream-border text-xs font-semibold px-3 py-1.5 rounded-lg hover:border-ink/40 transition-colors">Modifier</a>
+                <a href="delete_book.php?id=2" class="text-red-700 border border-red-200 bg-red-50 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors" onclick="return confirm('Supprimer ce livre ?')">Supprimer</a>
+              </div>
+            </td>
+          </tr>
+          <tr class="hover:bg-cream/50 transition-colors">
+            <td class="px-5 py-4 font-medium text-ink">L'Etranger</td>
+            <td class="px-5 py-4 text-ink-soft">Albert Camus</td>
+            <td class="px-5 py-4"><span class="bg-rose-100 text-rose-800 text-xs font-semibold px-2.5 py-1 rounded-full">Roman</span></td>
+            <td class="px-5 py-4 text-ink-soft">4.5 / 5</td>
+            <td class="px-5 py-4"><span class="text-forest text-xs font-semibold">Oui</span></td>
+            <td class="px-5 py-4 text-right">
+              <div class="flex gap-2 justify-end">
+                <a href="edit_book.php?id=3" class="text-ink border border-cream-border text-xs font-semibold px-3 py-1.5 rounded-lg hover:border-ink/40 transition-colors">Modifier</a>
+                <a href="delete_book.php?id=3" class="text-red-700 border border-red-200 bg-red-50 text-xs font-semibold px-3 py-1.5 rounded-lg hover:bg-red-100 transition-colors" onclick="return confirm('Supprimer ce livre ?')">Supprimer</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Table membres -->
+    <div class="flex items-center justify-between mb-4">
+      <h3 class="font-display text-lg font-semibold">Membres recents</h3>
+      <a href="users.php" class="text-forest text-sm font-semibold hover:underline">Voir tout &rarr;</a>
+    </div>
+    <div class="bg-white border border-cream-border rounded-xl overflow-hidden">
+      <table class="w-full text-sm">
+        <thead class="bg-cream border-b border-cream-border">
+          <tr>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Utilisateur</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Email</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Role</th>
+            <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Inscription</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-cream-border">
+          <tr class="hover:bg-cream/50">
+            <td class="px-5 py-4 font-medium text-ink">jonathan_m</td>
+            <td class="px-5 py-4 text-ink-soft">jonathan@exemple.fr</td>
+            <td class="px-5 py-4"><span class="bg-forest/10 text-forest text-xs font-semibold px-2.5 py-1 rounded-full">Membre</span></td>
+            <td class="px-5 py-4 text-ink-muted">10 mars 2026</td>
+          </tr>
+          <tr class="hover:bg-cream/50">
+            <td class="px-5 py-4 font-medium text-ink">admin</td>
+            <td class="px-5 py-4 text-ink-soft">admin@exemple.fr</td>
+            <td class="px-5 py-4"><span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full">Admin</span></td>
+            <td class="px-5 py-4 text-ink-muted">1 janv. 2026</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- MEMBER DASHBOARD (member/dashboard.php)            -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <div class="border-t-4 border-dashed border-cream-border max-w-6xl mx-auto px-6 pt-16 pb-16">
+    <p class="text-xs font-semibold uppercase tracking-widest text-ink-muted mb-8">-- member/dashboard.php --</p>
+
+    <div class="mb-8">
+      <h2 class="font-display text-2xl font-bold text-ink">Mon espace</h2>
+      <p class="text-ink-muted text-sm mt-1">Bonjour Jonathan, retrouvez vos telechargements et vos avis.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2">
+        <h3 class="font-display text-lg font-semibold mb-4">Mes avis</h3>
+        <div class="space-y-3">
+          <div class="bg-white border border-cream-border rounded-xl p-5">
+            <div class="flex items-start justify-between mb-3">
+              <a href="../book.php?id=1" class="font-display text-base font-semibold text-ink hover:text-forest transition-colors">Clean Code</a>
+              <div class="flex gap-0.5">
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-3.5 h-3.5 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-3.5 h-3.5 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+            </div>
+            <p class="text-ink-soft text-sm leading-relaxed">Une reference absolue pour tout developpeur. Les principes sont intemporels.</p>
+            <p class="text-ink-muted text-xs mt-2">Poste le 12 mars 2026</p>
+          </div>
+        </div>
+      </div>
+
+      <aside class="space-y-5">
+        <div class="bg-white border border-cream-border rounded-xl p-5">
+          <h3 class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-4">Mon compte</h3>
+          <div class="space-y-2 text-sm">
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Nom</span>
+              <span class="text-ink font-medium">jonathan_m</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Role</span>
+              <span class="bg-forest/10 text-forest text-xs font-semibold px-2 py-0.5 rounded-full">Membre</span>
+            </div>
+            <div class="flex justify-between">
+              <span class="text-ink-muted">Avis</span>
+              <span class="text-ink font-medium">3 deposes</span>
+            </div>
+          </div>
+          <a href="profile.php" class="block text-center bg-ink text-white text-xs font-semibold py-2 rounded-lg mt-4 hover:bg-ink/80 transition-colors">Modifier le profil</a>
+        </div>
+        <a href="../index.php" class="block bg-white border border-cream-border rounded-xl p-5 hover:border-ink/30 transition-colors text-center">
+          <p class="text-sm font-semibold text-ink">Parcourir le catalogue</p>
+          <p class="text-ink-muted text-xs mt-1">Decouvrir de nouveaux livres</p>
+        </a>
+      </aside>
+    </div>
+  </div>
+
+  <footer class="border-t border-cream-border py-8 px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between text-ink-muted text-sm">
+      <span class="font-display text-ink text-base">Bibliotheca</span>
+      <span>Mini Bibliotheque &mdash; Projet PHP / PDO</span>
+    </div>
+  </footer>
+
+</body>
+</html>

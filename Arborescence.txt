@@ -1,0 +1,63 @@
+mini-biblio/
+│
+├── config/
+│   └── database.php
+│
+├── classes/
+│   ├── Book.php
+│   ├── Author.php
+│   ├── Category.php
+│   ├── User.php
+│   ├── Review.php
+│   ├── BookRepository.php
+│   ├── UserRepository.php
+│   └── ReviewRepository.php
+│
+├── includes/
+│   ├── functions.php
+│   ├── auth.php
+│   └── upload.php
+│
+├── uploads/
+│   └── pdfs/              ← hors public, accès contrôlé
+│
+├── public/
+│   ├── index.php          ← catalogue complet
+│   ├── book.php           ← détail d'un livre
+│   ├── search.php         ← résultats de recherche
+│   ├── category.php       ← livres par catégorie
+│   ├── author.php         ← livres d'un auteur
+│   ├── download.php       ← téléchargement sécurisé du PDF
+│   │
+│   ├── auth/
+│   │   ├── login.php
+│   │   ├── register.php
+│   │   └── logout.php
+│   │
+│   ├── member/
+│   │   ├── dashboard.php  ← espace membre
+│   │   ├── profile.php    ← modifier son profil
+│   │   └── reviews.php    ← ses avis
+│   │
+│   ├── admin/
+│   │   ├── index.php      ← tableau de bord admin
+│   │   ├── books.php      ← liste et gestion des livres
+│   │   ├── add_book.php
+│   │   ├── edit_book.php
+│   │   ├── delete_book.php
+│   │   ├── authors.php
+│   │   ├── add_author.php
+│   │   ├── categories.php
+│   │   ├── add_category.php
+│   │   ├── users.php      ← gestion des membres
+│   │   └── upload_pdf.php ← uploader un PDF pour un livre
+│   │
+│   └── assets/
+│       ├── css/style.css
+│       └── js/app.js
+│
+├── database/
+│   ├── schema.sql
+│   └── seed.sql
+│
+└── README.md
