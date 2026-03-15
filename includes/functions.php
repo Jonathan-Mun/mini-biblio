@@ -36,6 +36,12 @@ function get_id_user($username) {
     $stmt->execute([$username]);
     return $stmt->fetch();
 }
+function get_user_by_id($user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT id, username, email, role, bio, photo FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    return $stmt->fetch();
+}
 
 function create_user($user) {
     try {
@@ -80,15 +86,19 @@ function save_user_preferences(int $user_id, array $categories): void {
     foreach ($categories as $category_id) {
         $stmt->execute([$user_id, $category_id]);
     }
-}
-function get_role($user_id) {
+}function get_role($user_id) {
     global $pdo;
     $stmt = $pdo->prepare("SELECT role FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     return $stmt->fetchColumn();
 }
-    // Function utilitaires 
 
+function get_date_registration($user_id) {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT created_at FROM users WHERE id = ?");
+    $stmt->execute([$user_id]);
+    return $stmt->fetchColumn();
+}
 
 // Fonction de l' authentification
 function name_character(string $username): string {
@@ -134,6 +144,125 @@ function email_valid(string $email): bool {
     }
     return true;
 }
+
+// ─────────────────────────────────────────────────────
+// FONCTIONS UTILISATEUR
+// ─────────────────────────────────────────────────────
+function count_favorites(int $user_id): int {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM favorite_books WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    return (int) $stmt->fetchColumn();
+}
+
+// Récupère les derniers favoris (pour la grille du dashboard)
+function get_recent_favorites(int $user_id, int $limit = 3): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT b.id, b.title, b.cover_image, c.name AS category_name,
+               a.first_name, a.last_name
+        FROM favorite_books f
+        JOIN books      b ON b.id = f.book_id
+        JOIN authors    a ON a.id = b.author_id
+        JOIN categories c ON c.id = b.category_id
+        WHERE f.user_id = ?
+        ORDER BY f.created_at DESC
+        LIMIT ?
+    ");
+    $stmt->execute([$user_id, $limit]);
+    return $stmt->fetchAll();
+}
+
+function get_all_favorites(int $user_id): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT b.id, b.title, b.cover_image, c.name AS category_name,
+               a.first_name, a.last_name
+        FROM favorite_books f
+        JOIN books      b ON b.id = f.book_id
+        JOIN authors    a ON a.id = b.author_id
+        JOIN categories c ON c.id = b.category_id
+        WHERE f.user_id = ?
+    ");
+    $stmt->execute([$user_id]);
+    return $stmt->fetchAll();
+}
+function get_rating_reviews(int $id_review){
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT rating FROM reviews WHERE id = ?");
+    $stmt->execute([$id_review]);
+    return $stmt->fetchColumn();
+}
+
+// ─────────────────────────────────────────────────────
+// FONCTIONS TÉLÉCHARGEMENTS
+// ─────────────────────────────────────────────────────
+
+// Compte total des téléchargements
+function count_downloads(int $user_id): int {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM downloads WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    return (int) $stmt->fetchColumn();
+}
+
+// Récupère les derniers téléchargements (pour la table du dashboard)
+function get_recent_downloads(int $user_id, int $limit = 5): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT b.id, b.title, c.name AS category_name, d.downloaded_at
+        FROM downloads d
+        JOIN books      b ON b.id = d.book_id
+        JOIN categories c ON c.id = b.category_id
+        WHERE d.user_id = ?
+        ORDER BY d.downloaded_at DESC
+        LIMIT ?
+    ");
+    $stmt->execute([$user_id, $limit]);
+    return $stmt->fetchAll();
+}
+
+// ─────────────────────────────────────────────────────
+// FONCTIONS AVIS
+// ─────────────────────────────────────────────────────
+
+// Compte total des avis
+function count_user_reviews(int $user_id): int {
+    global $pdo;
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM reviews WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    return (int) $stmt->fetchColumn();
+}
+
+// Récupère les avis de l'utilisateur
+function get_user_reviews(int $user_id, int $limit = 5): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT r.id, r.rating, r.comment, r.created_at,
+               b.id AS book_id, b.title
+        FROM reviews r
+        JOIN books b ON b.id = r.book_id
+        WHERE r.user_id = ?
+        ORDER BY r.created_at DESC
+        LIMIT ?
+    ");
+    $stmt->execute([$user_id, $limit]);
+    return $stmt->fetchAll();
+}
+
+function get_user_preferences(int $user_id): array {
+    global $pdo;
+    $stmt = $pdo->prepare("
+        SELECT c.id, c.name, c.slug
+        FROM preference_user p
+        JOIN categories c ON c.id = p.category_id
+        WHERE p.user_id = ?
+        ORDER BY c.name ASC
+    ");
+    $stmt->execute([$user_id]);
+    return $stmt->fetchAll();
+}
+
 
 
 function get_admin_stats(): array {

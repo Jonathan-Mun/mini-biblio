@@ -31,17 +31,17 @@ include __DIR__ . '/../../includes/header.php';
           <div class="w-16 h-16 rounded-full bg-ink mx-auto mb-3 flex items-center justify-center overflow-hidden">
             <?php $photo = get_photo_path($_SESSION['user_id']); ?>
 
-            <div class="w-16 h-16 rounded-full bg-ink mx-auto mb-3 flex items-center justify-center overflow-hidden">
-              <?php if ($photo): ?>
-                <img src="/mini-biblio/<?= htmlspecialchars($photo) ?>"
-                    alt="Avatar"
-                    class="w-full h-full object-cover">
-              <?php else: ?>
-                <span class="font-display text-white text-2xl font-bold">
-                  <?= htmlspecialchars(name_character($_SESSION['username'])) ?>
-                </span>
-              <?php endif; ?>
-            </div>
+          <div class="w-16 h-16 rounded-full bg-ink mx-auto mb-3 overflow-hidden flex items-center justify-center">
+            <?php if ($photo): ?>
+              <img src="/mini-biblio/<?= htmlspecialchars($photo) ?>"
+                  alt="Avatar"
+                  class="w-16 h-16 rounded-full object-cover">
+            <?php else: ?>
+              <span class="font-display text-white text-2xl font-bold">
+                <?= htmlspecialchars(name_character($user['username'])) ?>
+              </span>
+            <?php endif; ?>
+          </div>
       </div>
         </div>
         <p class="font-semibold text-ink text-sm"><?= htmlspecialchars($_SESSION['username']) ?></p>
