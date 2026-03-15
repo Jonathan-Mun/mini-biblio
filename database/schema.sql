@@ -4,6 +4,7 @@
 --                   MySQL / MariaDB — UTF8MB4
 -- ════════════════════════════════════════════════════════════════
 
+DROP DATABASE IF EXISTS mini_biblio;
 CREATE DATABASE IF NOT EXISTS mini_biblio;
 USE mini_biblio;
 
@@ -26,6 +27,7 @@ CREATE TABLE users (
   username      VARCHAR(50)     NOT NULL UNIQUE,
   email         VARCHAR(150)    NOT NULL UNIQUE,
   password      VARCHAR(255)    NOT NULL,
+  bio           TEXT            NULL,
   role          ENUM('admin', 'membre') NOT NULL DEFAULT 'membre',
   is_active     TINYINT(1)      NOT NULL DEFAULT 1,
   photo        VARCHAR(255)    NULL, -- Chemin relatif : uploads/avatars/user-{id}.jpg
@@ -70,7 +72,7 @@ CREATE TABLE authors (
   bio           TEXT            NULL,
   nationality   VARCHAR(100)    NULL,
   photo         VARCHAR(255)    NULL,
-  born_year     YEAR            NULL, -- Année de naissance
+  born_year     SMALLINT            NULL, -- Année de naissance
   created_by    INT UNSIGNED    NULL -- Date de creation de la fiche auteur
 );
 
@@ -141,6 +143,35 @@ CREATE TABLE books (
 
   FOREIGN KEY (category_id) REFERENCES categories(id)
     ON DELETE RESTRICT
+    ON UPDATE CASCADE
+);
+-- ──────────────────────────────────────────────────────────────
+-- Table de liaison pour les préférences de catégories des membres
+-- ──────────────────────────────────────────────────────────────
+
+CREATE TABLE preference_user(
+  id            INT UNSIGNED    AUTO_INCREMENT PRIMARY KEY,
+  user_id       INT UNSIGNED    NOT NULL,
+  category_id   INT UNSIGNED    NOT NULL,
+  FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (category_id) REFERENCES categories(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE
+);
+-- Livre enregistrer par l'utilisateur dans sa liste de favoris
+CREATE TABLE favorite_books (
+  id            INT UNSIGNED    AUTO_INCREMENT PRIMARY KEY,
+  user_id       INT UNSIGNED    NOT NULL,
+  book_id       INT UNSIGNED    NOT NULL,
+  created_at    DATETIME        NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE(user_id, book_id),
+  FOREIGN KEY (user_id) REFERENCES users(id)
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  FOREIGN KEY (book_id) REFERENCES books(id)
+    ON DELETE CASCADE
     ON UPDATE CASCADE
 );
 -- ────────────────────────────────────────────────────────────────

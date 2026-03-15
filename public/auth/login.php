@@ -1,7 +1,55 @@
+<?php
+session_start();
+if (isset($_SESSION['user_id'])) {
+  header('Location: ../index.php');
+  exit;
+}
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+require_once __DIR__ . '/../../includes/functions.php';
+$error = '';
+if (isset($_GET['error'])) {
+  $error = error_message($_GET['error']);
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if(email_valid($_POST['email']) === false) {
+    header('Location: login.php?error=email_invalid');
+    die();
+  }
+  $email = $_POST['email'];
+  $password = $_POST['password'];
+  $csrf_token = $_POST['csrf_token'];
 
+  if ($csrf_token !== $_SESSION['csrf_token']) {
+    header('HTTP/1.1 400 Bad Request');
+    header('Location: login.php?error=csrf_error');
+    die();
+  }
 
-
-
+  // Requête pour vérifier les identifiants
+  $user = verify_user($email, $password);
+  if ($user) {
+    $_SESSION['user_id'] = $user['id'];
+    $_SESSION['username'] = $user['username'];
+    if(get_role($user['id']) === 'admin') {
+      $_SESSION['is_admin'] = true;
+      header('Location: ../admin/dashbord.php');
+      exit();
+    }
+    else {
+      $_SESSION['is_admin'] = false;
+      header('Location: ../index.php');
+      exit();
+    }
+    
+    exit;
+  } else {
+    header('Location: login.php?error=invalid_credentials');
+    die();
+  }
+}
+?>
 
 <!DOCTYPE html>
 <html lang="fr">
@@ -55,12 +103,6 @@
         <?= htmlspecialchars($error) ?>
       </div>
       <?php endif; ?>
-
-      <!-- Alerte demo statique -->
-      <div class="bg-red-50 border border-red-200 text-red-700 text-sm px-4 py-3 rounded-lg mb-5">
-        Identifiants incorrects. Veuillez reessayer.
-      </div>
-
       <!-- Formulaire -->
       <form method="POST" action="login.php" class="space-y-5">
         <div>
@@ -73,6 +115,7 @@
           <input type="password" name="password" placeholder="••••••••"
             class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/50 bg-white transition-colors">
         </div>
+        <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($_SESSION['csrf_token'] ?? '') ?>">
         <button type="submit" class="w-full bg-ink text-white text-sm font-semibold py-3 rounded-lg hover:bg-ink/70 transition-colors mt-2">
           Se connecter
         </button>

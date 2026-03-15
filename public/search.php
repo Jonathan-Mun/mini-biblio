@@ -1,6 +1,11 @@
-<!-- ═══════════════════════════════════════════════════ -->
-  <!-- SEARCH PAGE (search.php)                           -->
-  <!-- ═══════════════════════════════════════════════════ -->
+<?php
+session_start();
+require_once __DIR__ . '/../includes/functions.php';
+require_once __DIR__ . '/../config/database.php';
+$active_page = 'search';
+
+include __DIR__ . '/../includes/header.php';
+?>
   <div class="bg-ink py-12 px-6">
     <div class="max-w-2xl mx-auto">
       <p class="text-white/50 text-xs font-semibold uppercase tracking-widest mb-3 text-center">Recherche</p>

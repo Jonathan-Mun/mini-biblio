@@ -1,0 +1,8 @@
+Order Deny,Allow
+Deny from all
+```
+
+Ou plus simple, tu mets **un seul `.htaccess` directement dans `uploads/`** et il protège tous les sous-dossiers automatiquement :
+```
+uploads/
+└── .htaccess          ← protège pdfs/, covers/ et avatars/ en une seule fois

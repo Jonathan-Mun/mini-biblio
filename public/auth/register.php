@@ -1,6 +1,51 @@
-<!-- ═══════════════════════════════════════════════════════════ -->
-<!-- REGISTER PAGE (register.php) — même structure             -->
-<!-- ═══════════════════════════════════════════════════════════ -->
+<?php
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+  $_SESSION['csrf_token'] = bin2hex(random_bytes(32));
+}
+require_once __DIR__ . '/../../includes/functions.php';
+include_once __DIR__ . '/../../classes/User.php';
+$error = '';
+if (isset($_GET['error'])) {
+  $error = error_message($_GET['error']);
+}
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  $csrf_token = $_POST['csrf_token'];
+  if ($csrf_token !== $_SESSION['csrf_token']) {
+    header('HTTP/1.1 400 Bad Request');
+    header('Location: login.php?error=csrf_error');
+    die();
+  }
+  if(email_valid($_POST['email']) === false) {
+    header('Location: register.php?error=email_invalid');
+    die();
+  }
+  $email = $_POST['email'];
+  if(email_exists($_POST['email'])) {
+    header('Location: register.php?error=email_exists');
+    die();
+  }
+  if(verify_username($_POST['username'])) {
+    header('Location: register.php?error=user_exists');
+    die();
+  }
+  $username = $_POST['username'];
+  $password = $_POST['password'];
+  $confiem_password = $_POST['password_confirm'];
+  if ($password !== $confiem_password) {
+    header('Location: register.php?error=password_mismatch');
+    die();
+  }
+  $user = new User(null, $username, $email, password_hash($password, PASSWORD_DEFAULT));
+  $_SESSION['user'] = $user;
+  $_SESSION['username'] = $username;
+  create_user($user);
+  header('Location: profil_config.php');
+  exit;
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -42,11 +87,11 @@
         <a href="login.php" class="flex-1 text-center py-2.5 text-sm font-semibold text-ink-muted hover:text-ink transition-colors">Connexion</a>
         <a href="register.php" class="flex-1 text-center py-2.5 text-sm font-semibold bg-ink text-white">S'inscrire</a>
       </div>
-
+      <?php if (!empty($error)): ?>
       <div class="bg-amber-50 border border-amber-200 text-amber-800 text-sm px-4 py-3 rounded-lg mb-5">
-        Cet email est deja utilise.
+        <?= htmlspecialchars($error) ?>
       </div>
-
+      <?php endif; ?>
       <form method="POST" action="register.php" class="space-y-4">
         <div>
           <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Nom d'utilisateur</label>
@@ -65,9 +110,10 @@
         </div>
         <div>
           <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">Confirmer le mot de passe</label>
-          <input type="password" name="password_confirm" placeholder="••••••••"
+          <input type="password" name="password_confirm" placeholder="••••••••" minlength="8"
             class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/50 bg-white transition-colors">
         </div>
+        <input type="hidden" name="csrf_token" value="<?= $_SESSION['csrf_token'] ?>">
         <button type="submit" class="w-full bg-forest text-white text-sm font-semibold py-3 rounded-lg hover:bg-forest-hover transition-colors mt-2">
           Creer mon compte
         </button>

@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Configurer mon compte — Mini Bibliothèque</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['Georgia','Cambria','serif'] },
+          colors: {
+            ink: { DEFAULT:'#1c1c1a', soft:'#4a4a46', muted:'#8a8a84' },
+            cream: { DEFAULT:'#f7f4ed', dark:'#ece8df', border:'#ddd9ce' },
+            forest: { DEFAULT:'#2c5f3e', light:'#e8f0eb', hover:'#234d32' },
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+    .pref-card input:checked + label {
+      border-color: #2c5f3e;
+      background-color: #e8f0eb;
+      color: #2c5f3e;
+    }
+  </style>
+</head>
+<body class="bg-ink min-h-screen px-4 py-12">
+
+  <div class="w-full max-w-2xl mx-auto">
+
+    <!-- Logo -->
+    <div class="text-center mb-8">
+      <a href="../index.php" class="font-display text-white text-3xl tracking-wide">Bibliotheca</a>
+      <p class="text-white/40 text-sm mt-2">Encore une etape avant de commencer</p>
+    </div>
+
+    <!-- Etapes -->
+    <div class="flex items-center justify-center gap-2 mb-8">
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-white/20 text-white text-xs font-bold flex items-center justify-center line-through opacity-40">1</div>
+        <span class="text-white/40 text-xs font-medium hidden sm:block">Inscription</span>
+      </div>
+      <div class="w-8 h-px bg-white/20"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-white text-ink text-xs font-bold flex items-center justify-center">2</div>
+        <span class="text-white text-xs font-medium hidden sm:block">Mon profil</span>
+      </div>
+      <div class="w-8 h-px bg-white/20"></div>
+      <div class="flex items-center gap-2">
+        <div class="w-7 h-7 rounded-full bg-white/20 text-white/40 text-xs font-bold flex items-center justify-center">3</div>
+        <span class="text-white/40 text-xs font-medium hidden sm:block">Mes preferences</span>
+      </div>
+    </div>
+
+    <div class="bg-cream rounded-2xl shadow-2xl overflow-hidden">
+
+      <!-- ══════════════════════════════════════════════════ -->
+      <!-- ETAPE 2 — PROFIL                                  -->
+      <!-- ══════════════════════════════════════════════════ -->
+      <div class="p-8 border-b border-cream-border">
+        <h2 class="font-display text-2xl font-bold text-ink mb-1">Configurez votre profil</h2>
+        <p class="text-ink-muted text-sm">Ces informations seront visibles sur votre page publique.</p>
+      </div>
+
+      <form method="POST" action="setup.php" enctype="multipart/form-data" class="p-8 space-y-6">
+
+        <!-- Photo de profil -->
+        <div>
+          <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">Photo de profil</label>
+          <div class="flex items-center gap-5">
+            <div class="w-20 h-20 rounded-full bg-cream-dark border-2 border-dashed border-cream-border flex items-center justify-center flex-shrink-0 overflow-hidden">
+              <span class="text-ink-muted text-xs text-center leading-tight px-2">Aucune photo</span>
+            </div>
+            <div>
+              <label for="photo" class="cursor-pointer inline-block bg-ink text-white text-xs font-semibold px-4 py-2.5 rounded-lg hover:bg-ink/80 transition-colors">
+                Choisir une photo
+              </label>
+              <input type="file" id="photo" name="photo" accept="image/*" class="hidden">
+              <p class="text-ink-muted text-xs mt-2">JPG ou PNG — 2 Mo maximum</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Bio -->
+        <div>
+          <label class="block text-xs font-semibold text-ink-muted uppercase tracking-wider mb-2">
+            Biographie <span class="normal-case font-normal text-ink-muted">(facultatif)</span>
+          </label>
+          <textarea name="bio" rows="3" placeholder="Presentez-vous en quelques mots..."
+            class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/40 bg-white transition-colors resize-none"></textarea>
+          <p class="text-ink-muted text-xs mt-1.5">250 caracteres maximum</p>
+        </div>
+
+        <!-- Bouton continuer -->
+        <div class="pt-2">
+          <button type="submit" name="step" value="preferences"
+            class="w-full bg-ink text-white text-sm font-semibold py-3 rounded-lg hover:bg-ink/80 transition-colors">
+            Continuer
+          </button>
+          <a href="skip.php" class="block text-center text-ink-muted text-xs mt-3 hover:text-ink transition-colors">
+            Passer cette etape
+          </a>
+        </div>
+
+      </form>
+
+      <!-- ══════════════════════════════════════════════════ -->
+      <!-- ETAPE 3 — PREFERENCES                             -->
+      <!-- ══════════════════════════════════════════════════ -->
+      <div class="border-t-2 border-dashed border-cream-border">
+
+        <div class="p-8 border-b border-cream-border">
+          <h2 class="font-display text-2xl font-bold text-ink mb-1">Vos centres d'interet</h2>
+          <p class="text-ink-muted text-sm">Selectionnez les categories qui vous interessent. Votre catalogue sera personnalise en fonction.</p>
+        </div>
+
+        <form method="POST" action="preferences.php" class="p-8">
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-8">
+
+            <?php
+            $categories = [
+              ['id' => 1, 'name' => 'Informatique',    'icon' => '💻'],
+              ['id' => 2, 'name' => 'Roman',            'icon' => '📖'],
+              ['id' => 3, 'name' => 'Histoire',         'icon' => '🏛'],
+              ['id' => 4, 'name' => 'Science',          'icon' => '🔬'],
+              ['id' => 5, 'name' => 'Philosophie',      'icon' => '🧠'],
+              ['id' => 6, 'name' => 'Economie',         'icon' => '📊'],
+              ['id' => 7, 'name' => 'Science-fiction',  'icon' => '🚀'],
+              ['id' => 8, 'name' => 'Biographie',       'icon' => '👤'],
+            ];
+            foreach ($categories as $cat):
+            ?>
+            <div class="pref-card">
+              <input type="checkbox" name="categories[]" value="<?= $cat['id'] ?>"
+                id="cat-<?= $cat['id'] ?>" class="hidden">
+              <label for="cat-<?= $cat['id'] ?>"
+                class="flex flex-col items-center gap-2 p-4 border-2 border-cream-border rounded-xl cursor-pointer hover:border-forest/40 transition-all text-center">
+                <span class="text-2xl"><?= $cat['icon'] ?></span>
+                <span class="text-xs font-semibold text-ink"><?= $cat['name'] ?></span>
+              </label>
+            </div>
+            <?php endforeach; ?>
+
+            <!-- Version demo statique HTML -->
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s1" class="hidden" checked>
+              <label for="cat-s1" class="flex flex-col items-center gap-2 p-4 border-2 border-forest bg-forest-light rounded-xl cursor-pointer text-center">
+                <span class="text-2xl">💻</span>
+                <span class="text-xs font-semibold text-forest">Informatique</span>
+              </label>
+            </div>
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s2" class="hidden">
+              <label for="cat-s2" class="flex flex-col items-center gap-2 p-4 border-2 border-cream-border rounded-xl cursor-pointer hover:border-forest/40 transition-all text-center">
+                <span class="text-2xl">📖</span>
+                <span class="text-xs font-semibold text-ink">Roman</span>
+              </label>
+            </div>
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s3" class="hidden" checked>
+              <label for="cat-s3" class="flex flex-col items-center gap-2 p-4 border-2 border-forest bg-forest-light rounded-xl cursor-pointer text-center">
+                <span class="text-2xl">🔬</span>
+                <span class="text-xs font-semibold text-forest">Science</span>
+              </label>
+            </div>
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s4" class="hidden">
+              <label for="cat-s4" class="flex flex-col items-center gap-2 p-4 border-2 border-cream-border rounded-xl cursor-pointer hover:border-forest/40 transition-all text-center">
+                <span class="text-2xl">🏛</span>
+                <span class="text-xs font-semibold text-ink">Histoire</span>
+              </label>
+            </div>
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s5" class="hidden">
+              <label for="cat-s5" class="flex flex-col items-center gap-2 p-4 border-2 border-cream-border rounded-xl cursor-pointer hover:border-forest/40 transition-all text-center">
+                <span class="text-2xl">🧠</span>
+                <span class="text-xs font-semibold text-ink">Philosophie</span>
+              </label>
+            </div>
+            <div class="pref-card">
+              <input type="checkbox" id="cat-s6" class="hidden">
+              <label for="cat-s6" class="flex flex-col items-center gap-2 p-4 border-2 border-cream-border rounded-xl cursor-pointer hover:border-forest/40 transition-all text-center">
+                <span class="text-2xl">🚀</span>
+                <span class="text-xs font-semibold text-ink">Science-fiction</span>
+              </label>
+            </div>
+
+          </div>
+
+          <p class="text-ink-muted text-xs mb-5">2 categories selectionnees — vous pouvez en choisir autant que vous voulez.</p>
+
+          <button type="submit"
+            class="w-full bg-forest text-white text-sm font-semibold py-3 rounded-lg hover:bg-forest-hover transition-colors">
+            Terminer la configuration
+          </button>
+          <a href="skip.php" class="block text-center text-ink-muted text-xs mt-3 hover:text-ink transition-colors">
+            Passer — je configurerai plus tard
+          </a>
+
+        </form>
+      </div>
+
+    </div>
+
+    <p class="text-center text-white/30 text-xs mt-6">
+      <a href="../index.php" class="hover:text-white/60 transition-colors">Retour au catalogue</a>
+    </p>
+  </div>
+
+  <script>
+    // Toggle visuel des cartes de categories
+    document.querySelectorAll('.pref-card input').forEach(input => {
+      input.addEventListener('change', () => {
+        const label = input.nextElementSibling;
+        const span  = label.querySelector('span:last-child');
+        if (input.checked) {
+          label.classList.add('border-forest', 'bg-forest-light');
+          label.classList.remove('border-cream-border');
+          span.classList.add('text-forest');
+          span.classList.remove('text-ink');
+        } else {
+          label.classList.remove('border-forest', 'bg-forest-light');
+          label.classList.add('border-cream-border');
+          span.classList.remove('text-forest');
+          span.classList.add('text-ink');
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
+
+
+<!-- ════════════════════════════════════════════════════════════ -->
+<!-- TABLEAU DE BORD MEMBRE  (member/dashboard.php)             -->
+<!-- ════════════════════════════════════════════════════════════ -->
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mon tableau de bord — Mini Bibliothèque</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { display: ['Georgia','Cambria','serif'] },
+          colors: {
+            ink: { DEFAULT:'#1c1c1a', soft:'#4a4a46', muted:'#8a8a84' },
+            cream: { DEFAULT:'#f7f4ed', dark:'#ece8df', border:'#ddd9ce' },
+            forest: { DEFAULT:'#2c5f3e', light:'#e8f0eb', hover:'#234d32' },
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'DM Sans', system-ui, sans-serif; }
+    .font-display { font-family: 'Playfair Display', Georgia, serif; }
+    .card-hover { transition: transform 200ms ease, box-shadow 200ms ease; }
+    .card-hover:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(28,28,26,.1); }
+  </style>
+</head>
+<body class="bg-cream text-ink min-h-screen">
+
+  <!-- NAVBAR -->
+  <nav class="bg-ink sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
+      <a href="../index.php" class="font-display text-white text-xl tracking-wide">Bibliotheca</a>
+      <div class="flex items-center gap-1">
+        <a href="../index.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Catalogue</a>
+        <a href="../search.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Recherche</a>
+        <a href="dashboard.php" class="text-white text-sm font-medium px-4 py-2 border-b-2 border-white">Mon espace</a>
+      </div>
+      <div class="flex items-center gap-3">
+        <span class="text-white/60 text-sm">Bonjour, <span class="text-white font-semibold">Jonathan</span></span>
+        <a href="../auth/logout.php" class="bg-white/10 text-white text-sm font-semibold px-4 py-1.5 rounded hover:bg-white/20 transition-colors">Deconnexion</a>
+      </div>
+    </div>
+  </nav>
+
+  <div class="max-w-6xl mx-auto px-6 py-10">
+    <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
+
+      <!-- ── SIDEBAR GAUCHE ── -->
+      <aside class="lg:col-span-1 space-y-4">
+
+        <!-- Profil -->
+        <div class="bg-white border border-cream-border rounded-xl p-5 text-center">
+          <div class="w-16 h-16 rounded-full bg-ink mx-auto mb-3 flex items-center justify-center">
+            <span class="font-display text-white text-2xl font-bold">J</span>
+          </div>
+          <p class="font-semibold text-ink text-sm">jonathan_m</p>
+          <p class="text-ink-muted text-xs mt-0.5">Membre depuis mars 2026</p>
+          <div class="mt-3 pt-3 border-t border-cream-border grid grid-cols-3 gap-2 text-center">
+            <div>
+              <p class="font-bold text-ink text-sm">8</p>
+              <p class="text-ink-muted text-xs">Favoris</p>
+            </div>
+            <div>
+              <p class="font-bold text-ink text-sm">3</p>
+              <p class="text-ink-muted text-xs">Avis</p>
+            </div>
+            <div>
+              <p class="font-bold text-ink text-sm">12</p>
+              <p class="text-ink-muted text-xs">Telecharg.</p>
+            </div>
+          </div>
+          <a href="profile.php" class="block mt-4 text-center border border-cream-border text-ink text-xs font-semibold py-2 rounded-lg hover:border-ink/40 transition-colors">
+            Modifier le profil
+          </a>
+        </div>
+
+        <!-- Navigation -->
+        <div class="bg-white border border-cream-border rounded-xl overflow-hidden">
+          <a href="dashboard.php" class="flex items-center gap-3 px-4 py-3 bg-ink text-white text-sm font-semibold">
+            <span>Tableau de bord</span>
+          </a>
+          <a href="favorites.php" class="flex items-center gap-3 px-4 py-3 text-ink-soft text-sm font-medium hover:bg-cream transition-colors border-t border-cream-border">
+            <span>Mes favoris</span>
+            <span class="ml-auto bg-cream-dark text-ink-muted text-xs font-bold px-2 py-0.5 rounded-full">8</span>
+          </a>
+          <a href="reviews.php" class="flex items-center gap-3 px-4 py-3 text-ink-soft text-sm font-medium hover:bg-cream transition-colors border-t border-cream-border">
+            <span>Mes avis</span>
+            <span class="ml-auto bg-cream-dark text-ink-muted text-xs font-bold px-2 py-0.5 rounded-full">3</span>
+          </a>
+          <a href="downloads.php" class="flex items-center gap-3 px-4 py-3 text-ink-soft text-sm font-medium hover:bg-cream transition-colors border-t border-cream-border">
+            <span>Telechargements</span>
+          </a>
+          <a href="preferences.php" class="flex items-center gap-3 px-4 py-3 text-ink-soft text-sm font-medium hover:bg-cream transition-colors border-t border-cream-border">
+            <span>Mes preferences</span>
+          </a>
+          <a href="profile.php" class="flex items-center gap-3 px-4 py-3 text-ink-soft text-sm font-medium hover:bg-cream transition-colors border-t border-cream-border">
+            <span>Mon profil</span>
+          </a>
+        </div>
+
+        <!-- Mes categories -->
+        <div class="bg-white border border-cream-border rounded-xl p-5">
+          <p class="text-xs font-semibold text-ink-muted uppercase tracking-wider mb-3">Mes categories</p>
+          <div class="flex flex-wrap gap-2">
+            <span class="bg-forest-light text-forest text-xs font-semibold px-3 py-1 rounded-full">Informatique</span>
+            <span class="bg-forest-light text-forest text-xs font-semibold px-3 py-1 rounded-full">Science</span>
+            <a href="preferences.php" class="text-ink-muted text-xs font-medium hover:text-ink transition-colors">+ Modifier</a>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- ── CONTENU PRINCIPAL ── -->
+      <div class="lg:col-span-3 space-y-8">
+
+        <!-- Bonjour -->
+        <div>
+          <h1 class="font-display text-2xl font-bold text-ink">Bonjour, Jonathan</h1>
+          <p class="text-ink-muted text-sm mt-1">Voici un apercu de votre activite sur Bibliotheca.</p>
+        </div>
+
+        <!-- Livres enregistres / a lire plus tard -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold text-ink">A lire plus tard</h2>
+              <p class="text-ink-muted text-xs mt-0.5">8 livres dans votre liste</p>
+            </div>
+            <a href="favorites.php" class="text-forest text-sm font-semibold hover:underline">Voir tout</a>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+
+            <a href="../book.php?id=1" class="bg-white border border-cream-border rounded-xl overflow-hidden card-hover block">
+              <div class="h-28 bg-gradient-to-br from-emerald-50 to-teal-100 flex items-end p-3">
+                <span class="text-xs text-ink/40 font-semibold uppercase tracking-wide">Informatique</span>
+              </div>
+              <div class="p-3">
+                <h3 class="font-display text-xs font-semibold text-ink leading-snug mb-1">Clean Code</h3>
+                <p class="text-ink-muted text-xs">R. Martin</p>
+              </div>
+            </a>
+
+            <a href="../book.php?id=2" class="bg-white border border-cream-border rounded-xl overflow-hidden card-hover block">
+              <div class="h-28 bg-gradient-to-br from-amber-50 to-orange-100 flex items-end p-3">
+                <span class="text-xs text-ink/40 font-semibold uppercase tracking-wide">Histoire</span>
+              </div>
+              <div class="p-3">
+                <h3 class="font-display text-xs font-semibold text-ink leading-snug mb-1">Sapiens</h3>
+                <p class="text-ink-muted text-xs">Y. Harari</p>
+              </div>
+            </a>
+
+            <a href="../book.php?id=3" class="bg-white border border-cream-border rounded-xl overflow-hidden card-hover block">
+              <div class="h-28 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-end p-3">
+                <span class="text-xs text-ink/40 font-semibold uppercase tracking-wide">Science</span>
+              </div>
+              <div class="p-3">
+                <h3 class="font-display text-xs font-semibold text-ink leading-snug mb-1">Une breve histoire du temps</h3>
+                <p class="text-ink-muted text-xs">S. Hawking</p>
+              </div>
+            </a>
+
+            <a href="favorites.php" class="bg-cream-dark border border-dashed border-cream-border rounded-xl flex items-center justify-center text-center p-4 card-hover">
+              <div>
+                <p class="text-ink-muted text-xs font-semibold">+ 5 autres livres</p>
+                <p class="text-forest text-xs font-semibold mt-1 hover:underline">Voir tout</p>
+              </div>
+            </a>
+
+          </div>
+        </div>
+
+        <!-- Derniers telechargements -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold text-ink">Derniers telechargements</h2>
+              <p class="text-ink-muted text-xs mt-0.5">12 livres telecharges au total</p>
+            </div>
+            <a href="downloads.php" class="text-forest text-sm font-semibold hover:underline">Voir tout</a>
+          </div>
+
+          <div class="bg-white border border-cream-border rounded-xl overflow-hidden">
+            <table class="w-full text-sm">
+              <thead class="bg-cream border-b border-cream-border">
+                <tr>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Livre</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider hidden sm:table-cell">Categorie</th>
+                  <th class="text-left px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Date</th>
+                  <th class="text-right px-5 py-3 text-xs font-semibold text-ink-muted uppercase tracking-wider">Action</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-cream-border">
+                <tr class="hover:bg-cream/50 transition-colors">
+                  <td class="px-5 py-3 font-medium text-ink">Clean Code</td>
+                  <td class="px-5 py-3 hidden sm:table-cell">
+                    <span class="bg-forest-light text-forest text-xs font-semibold px-2.5 py-1 rounded-full">Informatique</span>
+                  </td>
+                  <td class="px-5 py-3 text-ink-muted text-xs">12 mars 2026</td>
+                  <td class="px-5 py-3 text-right">
+                    <a href="../download.php?id=1" class="text-forest text-xs font-semibold hover:underline">Retelecharger</a>
+                  </td>
+                </tr>
+                <tr class="hover:bg-cream/50 transition-colors">
+                  <td class="px-5 py-3 font-medium text-ink">Sapiens</td>
+                  <td class="px-5 py-3 hidden sm:table-cell">
+                    <span class="bg-amber-100 text-amber-800 text-xs font-semibold px-2.5 py-1 rounded-full">Histoire</span>
+                  </td>
+                  <td class="px-5 py-3 text-ink-muted text-xs">8 mars 2026</td>
+                  <td class="px-5 py-3 text-right">
+                    <a href="../download.php?id=2" class="text-forest text-xs font-semibold hover:underline">Retelecharger</a>
+                  </td>
+                </tr>
+                <tr class="hover:bg-cream/50 transition-colors">
+                  <td class="px-5 py-3 font-medium text-ink">L Etranger</td>
+                  <td class="px-5 py-3 hidden sm:table-cell">
+                    <span class="bg-rose-100 text-rose-800 text-xs font-semibold px-2.5 py-1 rounded-full">Roman</span>
+                  </td>
+                  <td class="px-5 py-3 text-ink-muted text-xs">2 mars 2026</td>
+                  <td class="px-5 py-3 text-right">
+                    <a href="../download.php?id=3" class="text-forest text-xs font-semibold hover:underline">Retelecharger</a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Mes avis -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold text-ink">Mes avis</h2>
+              <p class="text-ink-muted text-xs mt-0.5">3 avis publies</p>
+            </div>
+            <a href="reviews.php" class="text-forest text-sm font-semibold hover:underline">Voir tout</a>
+          </div>
+
+          <div class="space-y-3">
+
+            <div class="bg-white border border-cream-border rounded-xl p-5">
+              <div class="flex items-start justify-between mb-2">
+                <a href="../book.php?id=1" class="font-display text-sm font-semibold text-ink hover:text-forest transition-colors">Clean Code</a>
+                <div class="flex gap-0.5 flex-shrink-0">
+                  <?php for ($i = 1; $i <= 5; $i++): ?>
+                  <svg class="w-3 h-3 <?= $i <= 5 ? 'text-amber-400' : 'text-cream-border' ?>" fill="currentColor" viewBox="0 0 20 20">
+                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                  </svg>
+                  <?php endfor; ?>
+                </div>
+              </div>
+              <p class="text-ink-soft text-sm leading-relaxed">Reference absolue. Lecture obligatoire pour tout developpeur.</p>
+              <div class="flex items-center justify-between mt-3">
+                <p class="text-ink-muted text-xs">Publie le 12 mars 2026</p>
+                <a href="reviews.php?delete=1" class="text-red-600 text-xs font-semibold hover:underline" onclick="return confirm('Supprimer cet avis ?')">Supprimer</a>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Modifier les preferences -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-display text-lg font-semibold text-ink">Mes preferences</h2>
+              <p class="text-ink-muted text-xs mt-0.5">Categories selectionnees pour votre catalogue personnalise</p>
+            </div>
+            <a href="preferences.php" class="text-forest text-sm font-semibold hover:underline">Modifier</a>
+          </div>
+
+          <div class="bg-white border border-cream-border rounded-xl p-5">
+            <div class="flex flex-wrap gap-2">
+              <span class="bg-forest-light text-forest text-xs font-semibold px-3 py-1.5 rounded-full">Informatique</span>
+              <span class="bg-forest-light text-forest text-xs font-semibold px-3 py-1.5 rounded-full">Science</span>
+              <a href="preferences.php" class="border border-dashed border-cream-border text-ink-muted text-xs font-semibold px-3 py-1.5 rounded-full hover:border-ink/40 hover:text-ink transition-colors">
+                + Ajouter une categorie
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="border-t border-cream-border mt-8 py-8 px-6">
+    <div class="max-w-6xl mx-auto flex items-center justify-between text-ink-muted text-sm">
+      <span class="font-display text-ink text-base">Bibliotheca</span>
+      <span>Mini Bibliotheque &mdash; Projet PHP / PDO</span>
+    </div>
+  </footer>
+
+</body>
+</html>

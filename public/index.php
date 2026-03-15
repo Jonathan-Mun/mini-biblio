@@ -1,200 +1,94 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Catalogue — Mini Bibliothèque</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <script>
-    tailwind.config = {
-      theme: {
-        extend: {
-          fontFamily: {
-            display: ['Georgia', 'Cambria', 'serif'],
-            body: ['system-ui', 'sans-serif']
-          },
-          colors: {
-            ink: { DEFAULT: '#1c1c1a', soft: '#4a4a46', muted: '#8a8a84' },
-            cream: { DEFAULT: '#f7f4ed', dark: '#ece8df', border: '#ddd9ce' },
-            forest: { DEFAULT: '#2c5f3e', light: '#e8f0eb', hover: '#234d32' },
-          }
-        }
-      }
-    }
-  </script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'DM Sans', system-ui, sans-serif; }
-    .font-display { font-family: 'Playfair Display', Georgia, serif; }
-    .card-hover { transition: transform 200ms ease, box-shadow 200ms ease; }
-    .card-hover:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(28,28,26,.12); }
-  </style>
-</head>
-<body class="bg-cream text-ink min-h-screen">
+<?php
+require_once __DIR__ . '/../classes/User.php';
+require_once __DIR__ . '/../includes/functions.php';
+session_start();
 
-  <!-- NAVBAR -->
-  <nav class="bg-ink sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-6 h-14 flex items-center justify-between">
-      <a href="index.php" class="font-display text-white text-xl tracking-wide">Bibliotheca</a>
-      <div class="flex items-center gap-1">
-        <a href="index.php" class="text-white text-sm font-medium px-4 py-2 rounded border-b-2 border-white">Catalogue</a>
-        <a href="authors.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Auteurs</a>
-        <a href="search.php" class="text-white/60 text-sm font-medium px-4 py-2 hover:text-white transition-colors">Recherche</a>
-      </div>
-      <div class="flex items-center gap-3">
-        <a href="auth/login.php" class="text-white/70 text-sm hover:text-white transition-colors">Connexion</a>
-        <a href="auth/register.php" class="bg-white text-ink text-sm font-semibold px-4 py-1.5 rounded hover:bg-cream transition-colors">S'inscrire</a>
-      </div>
-    </div>
-  </nav>
+$page_title  = 'Catalogue — Bibliotheca';
+$active_page = 'catalogue';
 
-  <!-- HERO -->
-  <div class="bg-ink text-white py-14 px-6">
-    <div class="max-w-6xl mx-auto">
-      <p class="text-white/50 text-xs font-semibold uppercase tracking-widest mb-3">Catalogue complet</p>
-      <h1 class="font-display text-4xl mb-3">Tous les livres</h1>
-      <p class="text-white/60 text-sm max-w-lg">Parcourez notre collection, filtrez par catégorie et téléchargez les PDFs disponibles.</p>
+include __DIR__ . '/../includes/header.php';
+?>
+
+<!-- HERO -->
+<div class="bg-ink text-white py-14 px-6">
+  <div class="max-w-6xl mx-auto">
+    <p class="text-white/50 text-xs font-semibold uppercase tracking-widest mb-3">Catalogue complet</p>
+    <h1 class="font-display text-4xl mb-3">Tous les livres</h1>
+    <p class="text-white/60 text-sm max-w-lg">Parcourez notre collection, filtrez par categorie et telechargez les PDFs disponibles.</p>
+  </div>
+</div>
+
+<!-- FILTRES + CONTENU -->
+<div class="max-w-6xl mx-auto px-6 py-10">
+
+  <!-- Barre filtres -->
+  <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
+    <div class="flex flex-wrap gap-2">
+      <a href="index.php"
+         class="text-xs font-semibold px-4 py-2 rounded-full <?= !isset($_GET['category']) ? 'bg-ink text-white' : 'bg-white border border-cream-border text-ink/70 hover:border-ink/40' ?> transition-colors">
+        Tous
+      </a>
+      <?php foreach (get_all_categories() as $cat): ?>
+      <a href="index.php?category=<?= $cat['slug'] ?>"
+         class="text-xs font-semibold px-4 py-2 rounded-full <?= ($_GET['category'] ?? '') === $cat['slug'] ? 'bg-ink text-white' : 'bg-white border border-cream-border text-ink/70 hover:border-ink/40' ?> transition-colors">
+        <?= htmlspecialchars($cat['name']) ?>
+      </a>
+      <?php endforeach; ?>
     </div>
+    <p class="text-ink-muted text-sm"><?= count($books) ?> livre(s)</p>
   </div>
 
-  <!-- FILTRES + CONTENU -->
-  <div class="max-w-6xl mx-auto px-6 py-10">
-
-    <!-- Barre filtres -->
-    <div class="flex flex-wrap items-center justify-between gap-4 mb-8">
-      <div class="flex flex-wrap gap-2">
-        <button class="bg-ink text-white text-xs font-semibold px-4 py-2 rounded-full">Tous</button>
-        <button class="bg-white border border-cream-border text-ink/70 text-xs font-semibold px-4 py-2 rounded-full hover:border-ink/40 transition-colors">Roman</button>
-        <button class="bg-white border border-cream-border text-ink/70 text-xs font-semibold px-4 py-2 rounded-full hover:border-ink/40 transition-colors">Informatique</button>
-        <button class="bg-white border border-cream-border text-ink/70 text-xs font-semibold px-4 py-2 rounded-full hover:border-ink/40 transition-colors">Histoire</button>
-        <button class="bg-white border border-cream-border text-ink/70 text-xs font-semibold px-4 py-2 rounded-full hover:border-ink/40 transition-colors">Science</button>
-      </div>
-      <p class="text-ink-muted text-sm">24 livres</p>
-    </div>
-
-    <!-- Grille livres -->
-    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-
-      <!-- CARD LIVRE -->
+  <!-- Grille livres -->
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
+    <?php if (empty($books)): ?>
+      <p class="col-span-4 text-center text-ink-muted py-16">Aucun livre disponible pour le moment.</p>
+    <?php else: ?>
       <?php foreach ($books as $book): ?>
       <a href="book.php?id=<?= $book['id'] ?>" class="bg-white rounded-xl border border-cream-border card-hover block overflow-hidden">
-        <!-- Couverture placeholder -->
-        <div class="h-44 bg-gradient-to-br from-slate-100 to-slate-200 flex items-end p-4 relative">
-          <div class="absolute inset-0 bg-ink/5"></div>
-          <span class="relative text-xs font-semibold text-ink/40 uppercase tracking-wider"><?= htmlspecialchars($book['category']) ?></span>
+        <div class="h-44 bg-gradient-to-br from-slate-100 to-slate-200 flex items-end p-4 relative overflow-hidden">
+          <?php if ($book['cover_image']): ?>
+            <img src="<?= htmlspecialchars($book['cover_image']) ?>"
+                 alt="<?= htmlspecialchars($book['title']) ?>"
+                 class="absolute inset-0 w-full h-full object-cover">
+          <?php endif; ?>
+          <span class="relative z-10 text-xs font-semibold text-ink/40 uppercase tracking-wider">
+            <?= htmlspecialchars($book['category_name']) ?>
+          </span>
         </div>
         <div class="p-4">
-          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1 line-clamp-2"><?= htmlspecialchars($book['title']) ?></h3>
-          <p class="text-ink-muted text-xs mb-3"><?= htmlspecialchars($book['author_name']) ?></p>
+          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1 line-clamp-2">
+            <?= htmlspecialchars($book['title']) ?>
+          </h3>
+          <p class="text-ink-muted text-xs mb-3">
+            <?= htmlspecialchars($book['first_name'] . ' ' . $book['last_name']) ?>
+          </p>
           <div class="flex items-center justify-between">
             <div class="flex gap-0.5">
               <?php for ($i = 1; $i <= 5; $i++): ?>
-              <svg class="w-3 h-3 <?= $i <= round($book['avg_rating']) ? 'text-amber-400' : 'text-cream-border' ?>" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              <svg class="w-3 h-3 <?= $i <= round($book['avg_rating'] ?? 0) ? 'text-amber-400' : 'text-cream-border' ?>"
+                   fill="currentColor" viewBox="0 0 20 20">
+                <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+              </svg>
               <?php endfor; ?>
             </div>
-            <?php if ($book['has_pdf']): ?>
-            <span class="text-forest text-xs font-semibold">PDF dispo</span>
+            <?php if ($book['pdf_path']): ?>
+              <span class="text-forest text-xs font-semibold">PDF dispo</span>
             <?php endif; ?>
           </div>
         </div>
       </a>
       <?php endforeach; ?>
-
-      <!-- CARDS DEMO (HTML statique) -->
-      <a href="book.php?id=1" class="bg-white rounded-xl border border-cream-border card-hover block overflow-hidden">
-        <div class="h-44 bg-gradient-to-br from-emerald-50 to-teal-100 flex items-end p-4 relative">
-          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Informatique</span>
-        </div>
-        <div class="p-4">
-          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1">Clean Code</h3>
-          <p class="text-ink-muted text-xs mb-3">Robert C. Martin</p>
-          <div class="flex items-center justify-between">
-            <div class="flex gap-0.5">
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            </div>
-            <span class="text-forest text-xs font-semibold">PDF dispo</span>
-          </div>
-        </div>
-      </a>
-
-      <a href="book.php?id=2" class="bg-white rounded-xl border border-cream-border card-hover block overflow-hidden">
-        <div class="h-44 bg-gradient-to-br from-amber-50 to-orange-100 flex items-end p-4">
-          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Histoire</span>
-        </div>
-        <div class="p-4">
-          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1">Sapiens</h3>
-          <p class="text-ink-muted text-xs mb-3">Yuval Noah Harari</p>
-          <div class="flex gap-0.5">
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </div>
-        </div>
-      </a>
-
-      <a href="book.php?id=3" class="bg-white rounded-xl border border-cream-border card-hover block overflow-hidden">
-        <div class="h-44 bg-gradient-to-br from-blue-50 to-indigo-100 flex items-end p-4">
-          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Science</span>
-        </div>
-        <div class="p-4">
-          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1">Une brève histoire du temps</h3>
-          <p class="text-ink-muted text-xs mb-3">Stephen Hawking</p>
-          <div class="flex gap-0.5">
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            <svg class="w-3 h-3 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-          </div>
-        </div>
-      </a>
-
-      <a href="book.php?id=4" class="bg-white rounded-xl border border-cream-border card-hover block overflow-hidden">
-        <div class="h-44 bg-gradient-to-br from-rose-50 to-pink-100 flex items-end p-4">
-          <span class="text-xs font-semibold text-ink/40 uppercase tracking-wider">Roman</span>
-        </div>
-        <div class="p-4">
-          <h3 class="font-display text-base font-semibold text-ink leading-snug mb-1">L'Étranger</h3>
-          <p class="text-ink-muted text-xs mb-3">Albert Camus</p>
-          <div class="flex items-center justify-between">
-            <div class="flex gap-0.5">
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-amber-400" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-              <svg class="w-3 h-3 text-cream-border" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
-            </div>
-            <span class="text-forest text-xs font-semibold">PDF dispo</span>
-          </div>
-        </div>
-      </a>
-
-    </div>
-
-    <!-- Pagination -->
-    <div class="flex items-center justify-center gap-1 mt-12">
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">&lsaquo;</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded bg-ink text-white text-sm font-semibold">1</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">2</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">3</a>
-      <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">&rsaquo;</a>
-    </div>
+    <?php endif; ?>
   </div>
 
-  <!-- FOOTER -->
-  <footer class="border-t border-cream-border mt-16 py-8 px-6">
-    <div class="max-w-6xl mx-auto flex items-center justify-between text-ink-muted text-sm">
-      <span class="font-display text-ink text-base">Bibliotheca</span>
-      <span>Mini Bibliothèque &mdash; Projet PHP / PDO</span>
-    </div>
-  </footer>
+  <!-- Pagination -->
+  <div class="flex items-center justify-center gap-1 mt-12">
+    <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">&lsaquo;</a>
+    <a href="#" class="w-9 h-9 flex items-center justify-center rounded bg-ink text-white text-sm font-semibold">1</a>
+    <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">2</a>
+    <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">3</a>
+    <a href="#" class="w-9 h-9 flex items-center justify-center rounded border border-cream-border text-ink-muted text-sm hover:border-ink/40 transition-colors">&rsaquo;</a>
+  </div>
+</div>
 
-</body>
-</html>
+<?php include __DIR__ . '/../includes/footer.php'; ?>
