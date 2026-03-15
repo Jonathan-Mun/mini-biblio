@@ -1,3 +1,8 @@
+
+
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -68,7 +73,7 @@
           <input type="password" name="password" placeholder="••••••••"
             class="w-full border border-cream-border rounded-lg px-4 py-3 text-sm text-ink placeholder-ink-muted/50 focus:outline-none focus:border-ink/50 bg-white transition-colors">
         </div>
-        <button type="submit" class="w-full bg-ink text-white text-sm font-semibold py-3 rounded-lg hover:bg-ink/80 transition-colors mt-2">
+        <button type="submit" class="w-full bg-ink text-white text-sm font-semibold py-3 rounded-lg hover:bg-ink/70 transition-colors mt-2">
           Se connecter
         </button>
       </form>
