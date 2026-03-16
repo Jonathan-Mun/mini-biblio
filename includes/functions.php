@@ -336,3 +336,10 @@ function save_profile_photo(int $user_id, string $photo_path): bool {
     $stmt = $pdo->prepare("UPDATE users SET photo = ? WHERE id = ?");
     return $stmt->execute([$photo_path, $user_id]);
 }
+
+function delete_user_review(int $user_id, int $review_id): void {
+    global $pdo;
+    // On vérifie que l'avis appartient bien à cet utilisateur
+    $stmt = $pdo->prepare("DELETE FROM reviews WHERE id = ? AND user_id = ?");
+    $stmt->execute([$review_id, $user_id]);
+}

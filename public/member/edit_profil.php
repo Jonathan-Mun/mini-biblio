@@ -113,7 +113,7 @@ include __DIR__ . '/../../includes/header.php';
                 <span class="font-display text-white text-2xl font-bold">
                     <?php
                     if ($photo) {
-                        echo '<img src="/mini-biblio/' . $photo . '" alt="Photo de profil" class="w-full h-full object-cover object-center">';
+                        echo '<img src="/mini-biblio/' . $photo . '" alt="Photo de profil" class="w-20 h-20 rounded-full object-cover">';
                     } else {
                         echo strtoupper(substr($user['username'], 0, 1));
                     }

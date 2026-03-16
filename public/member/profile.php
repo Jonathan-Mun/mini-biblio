@@ -33,56 +33,48 @@ include __DIR__ . '/../../includes/header.php';
 <?php include __DIR__ . '/slidebar.php'; ?>
 
       <div class="lg:col-span-3 space-y-6">
+      <div>
+        <h1 class="font-display text-2xl font-bold text-ink">Mon profil</h1>
+        <p class="text-ink-muted text-sm mt-1">Informations visibles sur votre page publique.</p>
+      </div>
 
-        <div>
-          <h1 class="font-display text-2xl font-bold text-ink">Mon profil</h1>
-          <p class="text-ink-muted text-sm mt-1">Informations visibles sur votre page publique.</p>
-        </div>
-
-        <!-- Carte profil -->
-        <div class="bg-white border border-cream-border rounded-xl overflow-hidden">
-          <div class="bg-ink h-24 relative">
-            <div class="absolute -bottom-10 left-6">
-          <div class="w-16 h-16 rounded-full bg-ink mx-auto mb-3 flex items-center justify-center">
-            <span class="font-display text-white text-2xl font-bold">
-                <?php
-                if ($photo) {
-                    echo '<img src="/mini-biblio/' . $photo . '" alt="Photo de profil" class="w-full h-full object-cover rounded-full">';
-                } else {
-                    echo strtoupper(substr($user['username'], 0, 1));
-                }
-                ?>
-            </span>
-          </div>
-            </div>
-          </div>
-          <div class="pt-14 px-6 pb-6">
-            <div class="flex items-start justify-between">
-              <div>
-                <h2 class="font-display text-xl font-bold text-ink"><?php echo htmlspecialchars($user['username']); ?></h2>
-                <p class="text-ink-muted text-xs mt-0.5"><?php echo "Membre depuis ".htmlspecialchars($date_reg->format("Y")); ?></p>
-              </div>
-              <a href="edit_profile.php" class="border border-cream-border text-ink text-xs font-semibold px-4 py-2 rounded-lg hover:border-ink/40 transition-colors">
-                Modifier le profil
-              </a>
-            </div>
-            <p class="text-ink-soft text-sm mt-4 leading-relaxed">
-                <?php
-                if ($user['bio']) {
-                    echo nl2br(htmlspecialchars($user['bio']));
-                } else {
-                    echo "Aucune biographie renseignée.";
-                }
-                ?>
-            </p>
-            <div class="flex gap-6 mt-5 pt-5 border-t border-cream-border">
-              <div><p class="font-bold text-ink text-lg"><?php echo htmlspecialchars($nb_favorites); ?></p><p class="text-ink-muted text-xs">Favoris</p></div>
-              <div><p class="font-bold text-ink text-lg"><?php echo htmlspecialchars($nb_reviews); ?></p><p class="text-ink-muted text-xs">Avis publies</p></div>
-              <div><p class="font-bold text-ink text-lg"><?php echo htmlspecialchars($nb_downloads); ?></p><p class="text-ink-muted text-xs">Telechargements</p></div>
+      <!-- Carte profil -->
+      <div class="bg-white border border-cream-border rounded-xl overflow-hidden">
+        <div class="bg-ink h-24 relative">
+          <div class="absolute -bottom-10 left-6">
+            <div class="w-20 h-20 rounded-full border-4 border-white overflow-hidden bg-forest flex items-center justify-center">
+              <?php if ($photo): ?>
+                <img src="/mini-biblio/<?= htmlspecialchars($photo) ?>"
+                    alt="Photo de profil"
+                    class="w-20 h-20 object-cover object-center">
+              <?php else: ?>
+                <span class="font-display text-white text-2xl font-bold">
+                  <?= htmlspecialchars(name_character($user['username'])) ?>
+                </span>
+              <?php endif; ?>
             </div>
           </div>
         </div>
-
+        <div class="pt-14 px-6 pb-6">
+          <div class="flex items-start justify-between">
+            <div>
+              <h2 class="font-display text-xl font-bold text-ink"><?= htmlspecialchars($user['username']) ?></h2>
+              <p class="text-ink-muted text-xs mt-0.5">Membre depuis <?= htmlspecialchars($date_reg->format("Y")) ?></p>
+            </div>
+            <a href="edit_profil.php" class="border border-cream-border text-ink text-xs font-semibold px-4 py-2 rounded-lg hover:border-ink/40 transition-colors">
+              Modifier le profil
+            </a>
+          </div>
+          <p class="text-ink-soft text-sm mt-4 leading-relaxed">
+            <?= $user['bio'] ? nl2br(htmlspecialchars($user['bio'])) : 'Aucune biographie renseignee.' ?>
+          </p>
+          <div class="flex gap-6 mt-5 pt-5 border-t border-cream-border">
+            <div><p class="font-bold text-ink text-lg"><?= $nb_favorites ?></p><p class="text-ink-muted text-xs">Favoris</p></div>
+            <div><p class="font-bold text-ink text-lg"><?= $nb_reviews ?></p><p class="text-ink-muted text-xs">Avis publies</p></div>
+            <div><p class="font-bold text-ink text-lg"><?= $nb_downloads ?></p><p class="text-ink-muted text-xs">Telechargements</p></div>
+          </div>
+        </div>
+      </div>
         <!-- Centres d'intérêt -->
         <div class="bg-white border border-cream-border rounded-xl p-6">
           <h3 class="font-display text-base font-semibold text-ink mb-4">Centres d'interet</h3>
