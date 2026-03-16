@@ -38,7 +38,7 @@ function get_id_user($username) {
 }
 function get_user_by_id($user_id) {
     global $pdo;
-    $stmt = $pdo->prepare("SELECT id, username, email, role, bio, photo FROM users WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT id, username, email, password ,role, bio, photo FROM users WHERE id = ?");
     $stmt->execute([$user_id]);
     return $stmt->fetch();
 }
@@ -76,12 +76,9 @@ function get_photo_path(int $user_id): ?string {
 
 function save_user_preferences(int $user_id, array $categories): void {
     global $pdo;
-
-    // Supprimer les anciennes préférences
     $stmt = $pdo->prepare("DELETE FROM preference_user WHERE user_id = ?");
     $stmt->execute([$user_id]);
 
-    // Insérer les nouvelles
     $stmt = $pdo->prepare("INSERT INTO preference_user (user_id, category_id) VALUES (?, ?)");
     foreach ($categories as $category_id) {
         $stmt->execute([$user_id, $category_id]);
@@ -137,7 +134,7 @@ function email_valid(string $email): bool {
     if (!email_letters($email)) {
         return false;
     }
-    // Vérifie que le domaine du mail existe réellement
+
     $domain = substr(strrchr($email, '@'), 1);
     if (!checkdnsrr($domain, 'MX')) {
         return false;
@@ -155,7 +152,6 @@ function count_favorites(int $user_id): int {
     return (int) $stmt->fetchColumn();
 }
 
-// Récupère les derniers favoris (pour la grille du dashboard)
 function get_recent_favorites(int $user_id, int $limit = 3): array {
     global $pdo;
     $stmt = $pdo->prepare("
@@ -315,4 +311,28 @@ function get_recent_reviews(int $limit = 5): array {
     ");
     $stmt->execute([$limit]);
     return $stmt->fetchAll();
+}
+
+function change_password(int $user_id, string $new_password): bool {
+    global $pdo;
+    $hashed_password = password_hash($new_password, PASSWORD_DEFAULT);
+    $stmt = $pdo->prepare("UPDATE users SET password = ? WHERE id = ?");
+    return $stmt->execute([$hashed_password, $user_id]);
+}
+
+function delete_account(int $user_id): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+    return $stmt->execute([$user_id]);
+}
+function update_user_profile(int $user_id, string $username, string $email, string $bio): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE users SET username = ?, email = ?, bio = ? WHERE id = ?");
+    return $stmt->execute([$username, $email, $bio, $user_id]);
+}
+
+function save_profile_photo(int $user_id, string $photo_path): bool {
+    global $pdo;
+    $stmt = $pdo->prepare("UPDATE users SET photo = ? WHERE id = ?");
+    return $stmt->execute([$photo_path, $user_id]);
 }
